@@ -1098,6 +1098,33 @@ public class Evaluator {
 			System.out.println("Error in Evaluator::rank(): " + ex.toString());
 		}
 	}
+
+    /**
+     * Write the model's score for each of the documents in a test rankings.
+     * @param modelFile Pre-trained model
+     * @param testArray Test data
+     */
+    public List<double[]> score(Ranker modelFile,List<RankList> testArray)
+    {
+        Ranker ranker = modelFile;
+        int[] features = ranker.getFeatures();
+        List<RankList> test = testArray;
+        List<double[]> results = new ArrayList<>(testArray.size());
+        if(normalize)
+            normalize(test, features);
+        for(int i=0;i<test.size();i++)
+            {
+                RankList l = test.get(i);
+                results.add(new double[l.size()]);
+                for(int j=0;j<l.size();j++)
+                {
+                    results.get(i)[j] = ranker.eval(l.get(j));
+                }
+            }
+        return results;
+    }
+
+
 	/**
 	 * Write the models' score for each of the documents in a test rankings. These test rankings are splitted into k chunks where k=|models|.
 	 * Each model is applied on the data from the corresponding fold.

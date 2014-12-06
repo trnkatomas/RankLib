@@ -5,6 +5,13 @@ public class DenseDataPoint extends DataPoint {
 	public DenseDataPoint(String text) {
 		super(text);
 	}
+
+    public DenseDataPoint(int label, int id, float[] featureVector){
+        super();
+        this.label = label;
+        this.id = id+"";
+        this.setFeatureVector(featureVector);
+    }
 	
 	public DenseDataPoint(DenseDataPoint dp)
 	{
