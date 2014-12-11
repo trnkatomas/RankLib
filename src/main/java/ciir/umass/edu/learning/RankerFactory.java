@@ -36,6 +36,7 @@ public class RankerFactory {
 	protected static HashMap<String, RANKER_TYPE> map = new HashMap<String, RANKER_TYPE>();
 	
 	public RankerFactory()
+
 	{
 		map.put(createRanker(RANKER_TYPE.MART).name().toUpperCase(), RANKER_TYPE.MART);
 		map.put(createRanker(RANKER_TYPE.RANKNET).name().toUpperCase(), RANKER_TYPE.RANKNET);

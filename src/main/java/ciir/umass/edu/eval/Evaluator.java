@@ -43,6 +43,7 @@ import ciir.umass.edu.utilities.FileUtils;
 import ciir.umass.edu.utilities.MergeSorter;
 import ciir.umass.edu.utilities.MyThreadPool;
 import ciir.umass.edu.utilities.SimpleMath;
+import lombok.extern.log4j.Log4j;
 
 /**
  * @author vdang
@@ -50,6 +51,7 @@ import ciir.umass.edu.utilities.SimpleMath;
  * This class is meant to provide the interface to run and compare different ranking algorithms. It lets users specify general parameters (e.g. what algorithm to run, 
  * training/testing/validating data, etc.) as well as algorithm-specific parameters. Type "java -jar bin/RankLib.jar" at the command-line to see all the options. 
  */
+@Log4j
 public class Evaluator {
 
 	/**
@@ -257,8 +259,8 @@ public class Evaluator {
 					Evaluator.nml = new LinearNormalizer();
 				else
 				{
-					System.out.println("Unknown normalizor: " + n);
-					System.out.println("System will now exit.");
+					log.info("Unknown normalizor: " + n);
+					log.info("System will now exit.");
 					System.exit(1);
 				}
 			}
@@ -379,8 +381,8 @@ public class Evaluator {
 					RFRanker.rType = rType2[rt];
 				else
 				{
-					System.out.println(rType[rt] + " cannot be bagged. Random Forests only supports MART/LambdaMART.");
-					System.out.println("System will now exit.");
+					log.info(rType[rt] + " cannot be bagged. Random Forests only supports MART/LambdaMART.");
+					log.info("System will now exit.");
 					System.exit(1);      
 				}
 			}
@@ -406,8 +408,8 @@ public class Evaluator {
 				mustHaveRelDoc = true;
 			else
 			{
-				System.out.println("Unknown command-line parameter: " + args[i]);
-				System.out.println("System will now exit.");
+				log.info("Unknown command-line parameter: " + args[i]);
+				log.info("System will now exit.");
 				System.exit(1);
 			}
 		}
@@ -420,55 +422,55 @@ public class Evaluator {
 			testMetric = trainMetric;
 		
 		System.out.println("");
-		//System.out.println((keepOrigFeatures)?"Keep orig. features":"Discard orig. features");
-		System.out.println("[+] General Parameters:");
+		//log.info((keepOrigFeatures)?"Keep orig. features":"Discard orig. features");
+		log.info("[+] General Parameters:");
 		Evaluator e = new Evaluator(rType2[rankerType], trainMetric, testMetric);
 		if(trainFile.compareTo("")!=0)
 		{
-			System.out.println("Training data:\t" + trainFile);
+			log.info("Training data:\t" + trainFile);
 			
 			//print out parameter settings
 			if(foldCV != -1)
 			{
-				System.out.println("Cross validation: " + foldCV + " folds.");
+				log.info("Cross validation: " + foldCV + " folds.");
 				if(tvSplit > 0)
-					System.out.println("Train-Validation split: " + tvSplit);
+					log.info("Train-Validation split: " + tvSplit);
 			}
 			else
 			{
 				if(testFile.compareTo("") != 0)
-					System.out.println("Test data:\t" + testFile);
+					log.info("Test data:\t" + testFile);
 				else if(ttSplit > 0)//choose to split training data into train and test
-					System.out.println("Train-Test split: " + ttSplit);
+					log.info("Train-Test split: " + ttSplit);
 				
 				if(validationFile.compareTo("")!=0)//the user has specified the validation set 
-					System.out.println("Validation data:\t" + validationFile);
+					log.info("Validation data:\t" + validationFile);
 				else if(ttSplit <= 0 && tvSplit > 0)
-					System.out.println("Train-Validation split: " + tvSplit);
+					log.info("Train-Validation split: " + tvSplit);
 			}
-			System.out.println("Feature vector representation: " + ((useSparseRepresentation)?"Sparse":"Dense") + ".");
-			System.out.println("Ranking method:\t" + rType[rankerType]);
+			log.info("Feature vector representation: " + ((useSparseRepresentation) ? "Sparse" : "Dense") + ".");
+			log.info("Ranking method:\t" + rType[rankerType]);
 			if(featureDescriptionFile.compareTo("")!=0)
-				System.out.println("Feature description file:\t" + featureDescriptionFile);
+				log.info("Feature description file:\t" + featureDescriptionFile);
 			else
-				System.out.println("Feature description file:\tUnspecified. All features will be used.");
-			System.out.println("Train metric:\t" + trainMetric);
-			System.out.println("Test metric:\t" + testMetric);
+				log.info("Feature description file:\tUnspecified. All features will be used.");
+			log.info("Train metric:\t" + trainMetric);
+			log.info("Test metric:\t" + testMetric);
 			if(trainMetric.toUpperCase().startsWith("ERR") || testMetric.toUpperCase().startsWith("ERR"))
-				System.out.println("Highest relevance label (to compute ERR): " + (int)SimpleMath.logBase2(ERRScorer.MAX));
+				log.info("Highest relevance label (to compute ERR): " + (int) SimpleMath.logBase2(ERRScorer.MAX));
 			if(qrelFile.compareTo("") != 0)
-				System.out.println("TREC-format relevance judgment (only affects MAP and NDCG scores): " + qrelFile);
-			System.out.println("Feature normalization: " + ((Evaluator.normalize)?Evaluator.nml.name():"No"));
+				log.info("TREC-format relevance judgment (only affects MAP and NDCG scores): " + qrelFile);
+			log.info("Feature normalization: " + ((Evaluator.normalize) ? Evaluator.nml.name() : "No"));
 			if(kcvModelDir.compareTo("")!=0)
-				System.out.println("Models directory: " + kcvModelDir);
+				log.info("Models directory: " + kcvModelDir);
 			if(kcvModelFile.compareTo("")!=0)
-				System.out.println("Models' name: " + kcvModelFile);				
+				log.info("Models' name: " + kcvModelFile);
 			if(modelFile.compareTo("")!=0)
-				System.out.println("Model file: " + modelFile);
-			//System.out.println("#threads:\t" + nThread);
+				log.info("Model file: " + modelFile);
+			//log.info("#threads:\t" + nThread);
 			
 			System.out.println("");
-			System.out.println("[+] " + rType[rankerType] + "'s Parameters:");
+			log.info("[+] " + rType[rankerType] + "'s Parameters:");
 			RankerFactory rf = new RankerFactory();
 			
 			rf.createRanker(rType2[rankerType]).printParameters();
@@ -493,8 +495,8 @@ public class Evaluator {
 		}
 		else //scenario: test a saved model
 		{
-			System.out.println("Model file:\t" + savedModelFile);
-			System.out.println("Feature normalization: " + ((Evaluator.normalize)?Evaluator.nml.name():"No"));
+			log.info("Model file:\t" + savedModelFile);
+			log.info("Feature normalization: " + ((Evaluator.normalize) ? Evaluator.nml.name() : "No"));
 			if(rankFile.compareTo("") != 0)
 			{
 				if(scoreFile.compareTo("") != 0)
@@ -517,17 +519,17 @@ public class Evaluator {
 				}
 				else
 				{
-					System.out.println("This function has been removed.");
-					System.out.println("Consider using -score in addition to your current parameters, and do the ranking yourself based on these scores.");
+					log.info("This function has been removed.");
+					log.info("Consider using -score in addition to your current parameters, and do the ranking yourself based on these scores.");
 					System.exit(1);
 					//e.rank(savedModelFile, rankFile);
 				}
 			}
 			else
 			{
-				System.out.println("Test metric:\t" + testMetric);
+				log.info("Test metric:\t" + testMetric);
 				if(testMetric.startsWith("ERR"))
-					System.out.println("Highest relevance label (to compute ERR): " + (int)SimpleMath.logBase2(ERRScorer.MAX));
+					log.info("Highest relevance label (to compute ERR): " + (int) SimpleMath.logBase2(ERRScorer.MAX));
 				
 				if(savedModelFile.compareTo("") != 0)
 				{
@@ -701,13 +703,13 @@ public class Evaluator {
 		if(test != null)
 		{
 			double rankScore = evaluate(ranker, test);
-			System.out.println(testScorer.name() + " on test data: " + SimpleMath.round(rankScore, 4));
+			log.info(testScorer.name() + " on test data: " + SimpleMath.round(rankScore, 4));
 		}
 		if(modelFile.compareTo("")!=0)
 		{
 			System.out.println("");
 			ranker.save(modelFile);
-			System.out.println("Model saved to: " + modelFile);
+			log.info("Model saved to: " + modelFile);
 		}
         return ranker;
 	}
@@ -718,7 +720,7 @@ public class Evaluator {
 	 * @param featureDefFile
 	 * @param percentTrain
 	 */
-	public void evaluate(String sampleFile, String validationFile, String featureDefFile, double percentTrain)
+	public Ranker evaluate(String sampleFile, String validationFile, String featureDefFile, double percentTrain)
 	{
 		List<RankList> trainingData = new ArrayList<RankList>();
 		List<RankList> testData = new ArrayList<RankList>();
@@ -736,13 +738,14 @@ public class Evaluator {
 		
 		double rankScore = evaluate(ranker, testData);
 		
-		System.out.println(testScorer.name() + " on test data: " + SimpleMath.round(rankScore, 4));
+		log.info(testScorer.name() + " on test data: " + SimpleMath.round(rankScore, 4));
 		if(modelFile.compareTo("")!=0)
 		{
 			System.out.println("");
 			ranker.save(modelFile);
-			System.out.println("Model saved to: " + modelFile);
+			log.info("Model saved to: " + modelFile);
 		}
+        return ranker;
 	}
 	/**
 	 * Evaluate the currently selected ranking algorithm using percenTrain% of the training samples for training the rest as validation data.
@@ -771,13 +774,13 @@ public class Evaluator {
 		if(test != null)
 		{
 			double rankScore = evaluate(ranker, test);		
-			System.out.println(testScorer.name() + " on test data: " + SimpleMath.round(rankScore, 4));
+			log.info(testScorer.name() + " on test data: " + SimpleMath.round(rankScore, 4));
 		}
 		if(modelFile.compareTo("")!=0)
 		{
 			System.out.println("");
 			ranker.save(modelFile);
-			System.out.println("Model saved to: " + modelFile);
+			log.info("Model saved to: " + modelFile);
 		}
 	}
 	/**
@@ -857,18 +860,18 @@ public class Evaluator {
 			if(modelDir.compareTo("") != 0)
 			{
 				ranker.save(FileUtils.makePathStandard(modelDir) + "f" + (i+1) + "." + modelFile);
-				System.out.println("Fold-" + (i+1) + " model saved to: " + modelFile);				
+				log.info("Fold-" + (i + 1) + " model saved to: " + modelFile);
 			}
 		}
-		System.out.println("Summary:");
-		System.out.println(testScorer.name() + "\t|   Train\t| Test");
-		System.out.println("----------------------------------");
+		log.info("Summary:");
+		log.info(testScorer.name() + "\t|   Train\t| Test");
+		log.info("----------------------------------");
 		for(int i=0;i<nFold;i++)
-			System.out.println("Fold " + (i+1) + "\t|   " + SimpleMath.round(scores[i][0], 4) + "\t|  " + SimpleMath.round(scores[i][1], 4) + "\t");
-		System.out.println("----------------------------------");
-		System.out.println("Avg.\t|   " + SimpleMath.round(scoreOnTrain/nFold, 4) + "\t|  " + SimpleMath.round(scoreOnTest/nFold, 4) + "\t");
-		System.out.println("----------------------------------");
-		System.out.println("Total\t|   " + "\t" + "\t|  " + SimpleMath.round(totalScoreOnTest/totalTestSampleSize, 4) + "\t");
+			log.info("Fold " + (i + 1) + "\t|   " + SimpleMath.round(scores[i][0], 4) + "\t|  " + SimpleMath.round(scores[i][1], 4) + "\t");
+		log.info("----------------------------------");
+		log.info("Avg.\t|   " + SimpleMath.round(scoreOnTrain / nFold, 4) + "\t|  " + SimpleMath.round(scoreOnTest / nFold, 4) + "\t");
+		log.info("----------------------------------");
+		log.info("Total\t|   " + "\t" + "\t|  " + SimpleMath.round(totalScoreOnTest / totalTestSampleSize, 4) + "\t");
 	}
 	
 	/**
@@ -879,7 +882,7 @@ public class Evaluator {
 	{
 		List<RankList> test = readInput(testFile);
 		double rankScore = evaluate(null, test);
-		System.out.println(testScorer.name() + " on test data: " + SimpleMath.round(rankScore, 4));
+		log.info(testScorer.name() + " on test data: " + SimpleMath.round(rankScore, 4));
 	}
 	public void test(String testFile, String prpFile)
 	{
@@ -898,11 +901,11 @@ public class Evaluator {
 		rankScore /= test.size();
 		ids.add("all");
 		scores.add(rankScore);		
-		System.out.println(testScorer.name() + " on test data: " + SimpleMath.round(rankScore, 4));
+		log.info(testScorer.name() + " on test data: " + SimpleMath.round(rankScore, 4));
 		if(prpFile.compareTo("") != 0)
 		{
 			savePerRankListPerformanceFile(ids, scores, prpFile);
-			System.out.println("Per-ranked list performance saved to: " + prpFile);
+			log.info("Per-ranked list performance saved to: " + prpFile);
 		}
 	}
 	/**
@@ -933,11 +936,11 @@ public class Evaluator {
 		rankScore /= test.size();
 		ids.add("all");
 		scores.add(rankScore);		
-		System.out.println(testScorer.name() + " on test data: " + SimpleMath.round(rankScore, 4));
+		log.info(testScorer.name() + " on test data: " + SimpleMath.round(rankScore, 4));
 		if(prpFile.compareTo("") != 0)
 		{
 			savePerRankListPerformanceFile(ids, scores, prpFile);
-			System.out.println("Per-ranked list performance saved to: " + prpFile);
+			log.info("Per-ranked list performance saved to: " + prpFile);
 		}
 	}
 	/**
@@ -956,7 +959,7 @@ public class Evaluator {
 		List<RankList> samples = FeatureManager.readInput(testFile);
 		System.out.print("Preparing " + nFold + "-fold test data... ");
 		FeatureManager.prepareCV(samples, nFold, trainingData, testData);
-		System.out.println("[Done.]");
+		log.info("[Done.]");
 		double rankScore = 0.0;
 		List<String> ids = new ArrayList<String>();
 		List<Double> scores = new ArrayList<Double>();
@@ -980,11 +983,11 @@ public class Evaluator {
 		rankScore = rankScore/ids.size();
 		ids.add("all");
 		scores.add(rankScore);
-		System.out.println(testScorer.name() + " on test data: " + SimpleMath.round(rankScore, 4));
+		log.info(testScorer.name() + " on test data: " + SimpleMath.round(rankScore, 4));
 		if(prpFile.compareTo("") != 0)
 		{
 			savePerRankListPerformanceFile(ids, scores, prpFile);
-			System.out.println("Per-ranked list performance saved to: " + prpFile);
+			log.info("Per-ranked list performance saved to: " + prpFile);
 		}
 	}
 	/**
@@ -1019,11 +1022,11 @@ public class Evaluator {
 		rankScore = rankScore/ids.size();
 		ids.add("all");
 		scores.add(rankScore);
-		System.out.println(testScorer.name() + " on test data: " + SimpleMath.round(rankScore, 4));
+		log.info(testScorer.name() + " on test data: " + SimpleMath.round(rankScore, 4));
 		if(prpFile.compareTo("") != 0)
 		{
 			savePerRankListPerformanceFile(ids, scores, prpFile);
-			System.out.println("Per-ranked list performance saved to: " + prpFile);
+			log.info("Per-ranked list performance saved to: " + prpFile);
 		}
 	}
 	/**
@@ -1058,11 +1061,11 @@ public class Evaluator {
 			}
 			
 			double rankScore = evaluate(null, test);
-			System.out.println(testScorer.name() + " on test data: " + SimpleMath.round(rankScore, 4));
+			log.info(testScorer.name() + " on test data: " + SimpleMath.round(rankScore, 4));
 		}
 		catch(Exception ex)
 		{
-			System.out.println(ex.toString());
+			log.info(ex.toString());
 		}
 	}
 
@@ -1095,7 +1098,7 @@ public class Evaluator {
 		}
 		catch(Exception ex)
 		{
-			System.out.println("Error in Evaluator::rank(): " + ex.toString());
+			log.info("Error in Evaluator::rank(): " + ex.toString());
 		}
 	}
 
@@ -1141,7 +1144,7 @@ public class Evaluator {
 		List<RankList> samples = FeatureManager.readInput(testFile);
 		System.out.print("Preparing " + nFold + "-fold test data... ");
 		FeatureManager.prepareCV(samples, nFold, trainingData, testData);
-		System.out.println("[Done.]");
+		log.info("[Done.]");
 		try {
 			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "ASCII"));
 			for(int f=0;f<nFold;f++)
@@ -1165,7 +1168,7 @@ public class Evaluator {
 		}
 		catch(Exception ex)
 		{
-			System.out.println("Error in Evaluator::score(): " + ex.toString());
+			log.info("Error in Evaluator::score(): " + ex.toString());
 		}
 	}
 	/**
@@ -1200,7 +1203,7 @@ public class Evaluator {
 		}
 		catch(Exception ex)
 		{
-			System.out.println("Error in Evaluator::score(): " + ex.toString());
+			log.info("Error in Evaluator::score(): " + ex.toString());
 		}
 	}
 	/**
@@ -1237,7 +1240,7 @@ public class Evaluator {
 		}
 		catch(Exception ex)
 		{
-			System.out.println("Error in Evaluator::rank(): " + ex.toString());
+			log.info("Error in Evaluator::rank(): " + ex.toString());
 		}
 	}
 	/**
@@ -1264,7 +1267,7 @@ public class Evaluator {
 		}
 		catch(Exception ex)
 		{
-			System.out.println("Error in Evaluator::rank(): " + ex.toString());
+			log.info("Error in Evaluator::rank(): " + ex.toString());
 		}
 	}
 	/**
@@ -1283,7 +1286,7 @@ public class Evaluator {
 		List<RankList> samples = FeatureManager.readInput(testFile);
 		System.out.print("Preparing " + nFold + "-fold test data... ");
 		FeatureManager.prepareCV(samples, nFold, trainingData, testData);
-		System.out.println("[Done.]");
+		log.info("[Done.]");
 		try {
 			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(indriRanking), "ASCII"));
 			for(int f=0;f<nFold;f++)
@@ -1314,7 +1317,7 @@ public class Evaluator {
 		}
 		catch(Exception ex)
 		{
-			System.out.println("Error in Evaluator::rank(): " + ex.toString());
+			log.info("Error in Evaluator::rank(): " + ex.toString());
 		}
 	}	
 	/**
@@ -1356,7 +1359,7 @@ public class Evaluator {
 		}
 		catch(Exception ex)
 		{
-			System.out.println("Error in Evaluator::rank(): " + ex.toString());
+			log.info("Error in Evaluator::rank(): " + ex.toString());
 		}
 	}
 
@@ -1404,7 +1407,7 @@ public class Evaluator {
 		}
 		catch(Exception ex)
 		{
-			System.out.println("Error in Evaluator::savePerRankListPerformanceFile(): " + ex.toString());
+			log.info("Error in Evaluator::savePerRankListPerformanceFile(): " + ex.toString());
 			System.exit(1);
 		}
 	}
