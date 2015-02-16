@@ -37,7 +37,8 @@ public class Ranker {
 	protected double bestScoreOnValidationData = 0.0;
 	
 	protected List<RankList> validationSamples = null;
-	
+	private String out = "";
+
 	protected Ranker()
 	{
 		
@@ -109,14 +110,21 @@ public class Ranker {
 	}
 	protected void PRINTLN(String msg)
 	{
-		if(verbose)
-			log.info(msg);
+		if(verbose){
+				if (msg.isEmpty() && !out.isEmpty()){
+					log.info(out);
+					out = "";
+				}else {
+					log.info(msg);
+				}
+			}
 			//System.out.println(msg);
 	}
 	protected void PRINT(int[] len, String[] msgs)
 	{
 		if(verbose)
 		{
+
 			for(int i=0;i<msgs.length;i++)
 			{
 				String msg = msgs[i];
@@ -126,8 +134,9 @@ public class Ranker {
 					while(msg.length() < len[i])
 						msg += " ";
 				//System.out.print(msg + " | ");
-				log.info(msg + " | ");
+				out += msg + " | ";
 			}
+			//log.info(out);
 		}
 	}
 	protected void PRINTLN(int[] len, String[] msgs)

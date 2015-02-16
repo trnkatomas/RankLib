@@ -228,7 +228,7 @@ public class LambdaMART extends Ranker {
 			//**** NOTE ****
 			//The above function to evaluate the current model on the training data is equivalent to a single call:
 			//
-			//		scoreOnTrainingData = scorer.score(rank(samples);
+			//		scoreOnTrainingData = scorer.score(rank(samples));
 			//
 			//However, this function is more efficient since it uses the cached outputs of the model (as opposed to re-evaluating the model 
 			//on the entire training set).

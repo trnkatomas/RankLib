@@ -15,12 +15,18 @@
             <url>http://arti.goout.cz/artifactory/repository</url>
         </repository>
     </repositories>
+
     <dependencies>
-    <dependency>
-        <groupId>org.maite</groupId>
-        <artifactId>types</artifactId>
-        <version>1.2-SNAPSHOT</version>
-    </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.14</version>
+        </dependency>
+        <dependency>
+            <groupId>org.maite</groupId>
+            <artifactId>types</artifactId>
+            <version>1.2-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
         <distributionManagement>

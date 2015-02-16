@@ -151,6 +151,7 @@ public class FeatureManager {
 			String lastID = "";
 			boolean hasRel = false;
 			List<DataPoint> rl = new ArrayList<DataPoint>();
+
 			while((content = in.readLine()) != null)
 			{
 				content = content.trim();
