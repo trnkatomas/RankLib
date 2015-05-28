@@ -19,14 +19,12 @@ import ciir.umass.edu.learning.RankList;
 import ciir.umass.edu.metric.MetricScorer;
 import ciir.umass.edu.utilities.FileUtils;
 import ciir.umass.edu.utilities.MergeSorter;
-import lombok.extern.log4j.Log4j;
 
 /**
  * @author vdang
  * 
  * This class implements the generic Ranker interface. Each ranking algorithm implemented has to extend this class. 
  */
-@Log4j
 public class Ranker {
 	public static boolean verbose = true;
 
@@ -37,8 +35,7 @@ public class Ranker {
 	protected double bestScoreOnValidationData = 0.0;
 	
 	protected List<RankList> validationSamples = null;
-	private String out = "";
-
+	
 	protected Ranker()
 	{
 		
@@ -105,26 +102,17 @@ public class Ranker {
 	protected void PRINT(String msg)
 	{
 		if(verbose)
-			log.info(msg);
-			//System.out.print(msg);
+			System.out.print(msg);
 	}
 	protected void PRINTLN(String msg)
 	{
-		if(verbose){
-				if (msg.isEmpty() && !out.isEmpty()){
-					log.info(out);
-					out = "";
-				}else {
-					log.info(msg);
-				}
-			}
-			//System.out.println(msg);
+		if(verbose)
+			System.out.println(msg);
 	}
 	protected void PRINT(int[] len, String[] msgs)
 	{
 		if(verbose)
 		{
-
 			for(int i=0;i<msgs.length;i++)
 			{
 				String msg = msgs[i];
@@ -133,10 +121,8 @@ public class Ranker {
 				else
 					while(msg.length() < len[i])
 						msg += " ";
-				//System.out.print(msg + " | ");
-				out += msg + " | ";
+				System.out.print(msg + " | ");
 			}
-			//log.info(out);
 		}
 	}
 	protected void PRINTLN(int[] len, String[] msgs)
@@ -148,13 +134,11 @@ public class Ranker {
 	{
 		DateFormat dateFormat = new SimpleDateFormat("MM/dd HH:mm:ss");
 		Date date = new Date();
-		//System.out.println(dateFormat.format(date));
-		log.info(dateFormat.format(date));
+		System.out.println(dateFormat.format(date));
 	}
 	protected void PRINT_MEMORY_USAGE()
 	{
-		//System.out.println("***** " + Runtime.getRuntime().freeMemory() + " / " + Runtime.getRuntime().maxMemory());
-		log.info("***** " + Runtime.getRuntime().freeMemory() + " / " + Runtime.getRuntime().maxMemory());
+		System.out.println("***** " + Runtime.getRuntime().freeMemory() + " / " + Runtime.getRuntime().maxMemory());
 	}
 	
 	protected void copy(double[] source, double[] target)
