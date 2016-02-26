@@ -13,14 +13,12 @@ import java.util.List;
 
 import ciir.umass.edu.metric.MetricScorer;
 import ciir.umass.edu.utilities.SimpleMath;
-import lombok.extern.log4j.Log4j;
 
 /**
  * @author vdang
  * 
  * This class is for users who want to use this library programmatically. It provides trained rankers of different types with respect to user-specified parameters.
  */
-@Log4j
 public class RankerTrainer {
 
 	protected RankerFactory rf = new RankerFactory();
@@ -53,7 +51,6 @@ public class RankerTrainer {
 	}
 	public void printTrainingTime()
 	{
-		//System.out.println("Training time: " + SimpleMath.round((trainingTime)/1e9, 2) + " seconds");
-		log.info("Training time: " + SimpleMath.round((trainingTime)/1e9, 2) + " seconds");
+		System.out.println("Training time: " + SimpleMath.round((trainingTime)/1e9, 2) + " seconds");			
 	}
 }

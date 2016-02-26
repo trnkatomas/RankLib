@@ -73,7 +73,7 @@ public class MyThreadPool extends ThreadPoolExecutor {
 			catch(Exception ex)
 			{
 				System.out.println("Error in MyThreadPool.await(): " + ex.toString());
-				System.exit(1);
+				//System.exit(1);
 			}
 		}
 		for(int i=0;i<size;i++)
@@ -101,7 +101,7 @@ public class MyThreadPool extends ThreadPoolExecutor {
 		catch(Exception ex)
 		{
 			System.out.println("Error in MyThreadPool.execute(): " + ex.toString());
-			System.exit(1);
+			//System.exit(1);
 		}
 	}
 	protected void afterExecute(Runnable r, Throwable t)
