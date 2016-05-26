@@ -24,7 +24,9 @@ import ciir.umass.edu.learning.DenseDataPoint;
 import ciir.umass.edu.learning.SparseDataPoint;
 import ciir.umass.edu.learning.RankList;
 import ciir.umass.edu.utilities.FileUtils;
+import lombok.extern.log4j.Log4j;
 
+@Log4j
 public class FeatureManager {
 
 	/**
@@ -106,18 +108,18 @@ public class FeatureManager {
 				try{
 					for(int i=0;i<trains.size();i++)
 					{
-						System.out.print("Saving fold " + (i+1) + "/" + nFold + "... ");
+						log.info("Saving fold " + (i + 1) + "/" + nFold + "... ");
 						save(trains.get(i), outputDir + "f" + (i+1) + ".train." + fn);
 						save(tests.get(i), outputDir + "f" + (i+1) + ".test." + fn);
 						if(tvs > 0)
 							save(valis.get(i), outputDir + "f" + (i+1) + ".validation." + fn);
-						System.out.println("[Done]");
+						log.info("[Done]");
 					}					
 				}
 				catch(Exception ex)
 				{
-					System.out.println("Error: Cannot save partition data.");				
-					System.out.println("Occured in FeatureManager::main(): " + ex.toString());
+					log.info("Error: Cannot save partition data.");
+					log.info("Occured in FeatureManager::main(): " + ex.toString());
 				}
 			}
 		}
@@ -161,7 +163,7 @@ public class FeatureManager {
 					continue;
 				
 				if(countEntries % 10000 == 0)
-					System.out.print("\rReading feature file [" + inputFile + "]: " + countRL + "... ");
+					log.info("\rReading feature file [" + inputFile + "]: " + countRL + "... ");
 				
 				DataPoint qp = null;
 				if(useSparseRepresentation)
@@ -186,12 +188,12 @@ public class FeatureManager {
 			if(rl.size() > 0 && (!mustHaveRelDoc || hasRel))
 				samples.add(new RankList(rl));
 			in.close();
-			System.out.println("\rReading feature file [" + inputFile + "]... [Done.]            ");
-			System.out.println("(" + samples.size() + " ranked lists, " + countEntries + " entries read)");
+			log.info("\rReading feature file [" + inputFile + "]... [Done.]            ");
+			log.info("(" + samples.size() + " ranked lists, " + countEntries + " entries read)");
 		}
 		catch(Exception ex)
 		{
-			System.out.println("Error in FeatureManager::readInput(): " + ex.toString());
+			log.info("Error in FeatureManager::readInput(): " + ex.toString());
 			System.exit(1);
 		}
 		return samples;
@@ -239,7 +241,7 @@ public class FeatureManager {
 		}
 		catch(Exception ex)
 		{
-			System.out.println("Error in FeatureManager::readFeature(): " + ex.toString());
+			log.info("Error in FeatureManager::readFeature(): " + ex.toString());
 			System.exit(1);
 		}
 		return features;
@@ -338,7 +340,7 @@ public class FeatureManager {
 		
 		for(int i=0;i<trainSamplesIdx.size();i++)
 		{
-			System.out.print("\rCreating data for fold-" + (i+1) + "...");
+			log.info("\rCreating data for fold-" + (i + 1) + "...");
 			List<RankList> train = new ArrayList<RankList>();
 			List<RankList> test = new ArrayList<RankList>();
 			List<RankList> vali = new ArrayList<RankList>();

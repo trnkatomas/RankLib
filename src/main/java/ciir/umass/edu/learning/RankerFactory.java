@@ -24,12 +24,14 @@ import ciir.umass.edu.learning.tree.MART;
 import ciir.umass.edu.learning.tree.LambdaMART;
 import ciir.umass.edu.learning.tree.RFRanker;
 import ciir.umass.edu.metric.MetricScorer;
+import lombok.extern.log4j.Log4j;
 
 /**
  * @author vdang
  * 
  * This class implements the Ranker factory. All ranking algorithms implemented have to be recognized in this class. 
  */
+@Log4j
 public class RankerFactory {
 
 	protected Ranker[] rFactory = new Ranker[]{new MART(), new RankBoost(), new RankNet(), new AdaRank(), new CoorAscent(), new LambdaRank(), new LambdaMART(), new ListNet(), new RFRanker(), new LinearRegRank()};
@@ -71,19 +73,19 @@ public class RankerFactory {
 			r = (Ranker) c.newInstance();
 		}
 		catch (ClassNotFoundException e) {
-			System.out.println("Could find the class \"" + className + "\" you specified. Make sure the jar library is in your classpath.");
+			log.fatal("Could find the class \"" + className + "\" you specified. Make sure the jar library is in your classpath.");
 			e.printStackTrace();
-			System.exit(1);
+			//System.exit(1);
 		}
 		catch (InstantiationException e) {
-			System.out.println("Cannot create objects from the class \"" + className + "\" you specified.");
+			log.fatal("Cannot create objects from the class \"" + className + "\" you specified.");
 			e.printStackTrace();
-			System.exit(1);
+			//System.exit(1);
 		}
 		catch (IllegalAccessException e) {
-			System.out.println("The class \"" + className + "\" does not implement the Ranker interface.");
+			log.fatal("The class \"" + className + "\" does not implement the Ranker interface.");
 			e.printStackTrace();
-			System.exit(1);
+			//System.exit(1);
 		}
 		return r;
 	}
@@ -109,8 +111,9 @@ public class RankerFactory {
 		}
 		catch(Exception ex)
 		{
-			System.out.println("Error in RankerFactory.load(): " + ex.toString());
-			System.exit(1);
+			log.fatal("Error in RankerFactory.load(): " + ex.toString());
+			//System.out.println("Error in RankerFactory.load(): " + ex.toString());
+			//System.exit(1);
 		}
 		return r;
 	}

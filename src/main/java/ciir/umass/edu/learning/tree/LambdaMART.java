@@ -34,7 +34,7 @@ import ciir.umass.edu.utilities.MergeSorter;
 public class LambdaMART extends Ranker {
 	//Parameters
 	public static int nTrees = 1000;//the number of trees
-	public static float learningRate = 0.1F;//or shrinkage
+	public static float learningRate = 0.01F;//or shrinkage
 	public static int nThreshold = 256;
 	public static int nRoundToStopEarly = 100;//If no performance gain on the *VALIDATION* data is observed in #rounds, stop the training process right away. 
 	public static int nTreeLeaves = 10;

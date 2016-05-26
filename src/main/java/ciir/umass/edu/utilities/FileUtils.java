@@ -291,7 +291,7 @@ public class FileUtils {
 		String dir = directory;
 		char c = dir.charAt(dir.length()-1);
 		if(c != '/' && c != '\\')
-			dir += File.pathSeparator;
+			dir += File.separator;
 		return dir;
 	}
 }
